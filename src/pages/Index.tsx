@@ -2,15 +2,20 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Sparkles, MapPin, ShoppingBag, TrendingUp, MessageSquare, Package, Loader2 } from "lucide-react";
+import { Sparkles, MapPin, ShoppingBag, TrendingUp, MessageSquare, Package, Loader2, ChevronDown, ChevronUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [recommendation, setRecommendation] = useState("");
+  const [isRecommendationExpanded, setIsRecommendationExpanded] = useState(true);
+  const [isExamplesExpanded, setIsExamplesExpanded] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const examplePrompts = [
     "I'm a 150 pound woman, fairly new with cannabis and want something that will bring me a peaceful mind on my hike.",
@@ -18,6 +23,11 @@ const Index = () => {
     "First-time user, 130 pounds, need something gentle to help me sleep without feeling too high.",
     "Moderate experience, 170 pounds, want a creative boost for my art projects without anxiety.",
   ];
+
+  const getCollapsedRecommendation = (text: string) => {
+    const sentences = text.match(/[^.!?]+[.!?]+/g) || [];
+    return sentences.slice(0, 6).join(" ");
+  };
 
   const handleSearch = async (query?: string) => {
     const searchText = query || searchQuery;
@@ -97,20 +107,58 @@ const Index = () => {
 
             {/* Example Prompts */}
             <div className="mb-8 max-w-3xl mx-auto">
-              <h3 className="text-lg font-semibold mb-4 text-center">Try asking something like:</h3>
-              <div className="grid gap-3">
-                {examplePrompts.map((prompt, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleExampleClick(prompt)}
-                    className="text-left p-4 bg-card/50 hover:bg-card border border-border rounded-lg transition-colors"
-                  >
-                    <p className="text-sm text-muted-foreground">
-                      {["💆‍♀️", "🎮", "😴", "🎨"][index]} {prompt}
-                    </p>
-                  </button>
-                ))}
-              </div>
+              <Collapsible open={isExamplesExpanded} onOpenChange={setIsExamplesExpanded}>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold">
+                    Try asking about: experience level, weight, activity, or objective of consumption
+                  </h3>
+                  <CollapsibleTrigger asChild>
+                    <Button variant="ghost" size="sm" className="gap-2">
+                      {isExamplesExpanded ? (
+                        <>
+                          <ChevronUp className="h-4 w-4" />
+                          Collapse
+                        </>
+                      ) : (
+                        <>
+                          <ChevronDown className="h-4 w-4" />
+                          Expand Examples
+                        </>
+                      )}
+                    </Button>
+                  </CollapsibleTrigger>
+                </div>
+                <CollapsibleContent>
+                  <div className="grid gap-3">
+                    {examplePrompts.map((prompt, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handleExampleClick(prompt)}
+                        className="text-left p-4 bg-card/50 hover:bg-card border border-border rounded-lg transition-colors"
+                      >
+                        <p className="text-sm text-muted-foreground">
+                          {["💆‍♀️", "🎮", "😴", "🎨"][index]} {prompt}
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+                </CollapsibleContent>
+                {!isExamplesExpanded && (
+                  <div className="grid gap-3">
+                    {examplePrompts.slice(0, 3).map((prompt, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handleExampleClick(prompt)}
+                        className="text-left p-4 bg-card/50 hover:bg-card border border-border rounded-lg transition-colors"
+                      >
+                        <p className="text-sm text-muted-foreground">
+                          {["💆‍♀️", "🎮", "😴"][index]} {prompt}
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </Collapsible>
             </div>
 
             {/* AI Search Box */}
@@ -153,12 +201,36 @@ const Index = () => {
             {recommendation && (
               <Card className="p-6 max-w-2xl mx-auto mt-6 shadow-lg border-2 border-secondary/20">
                 <div className="space-y-4">
-                  <div className="flex items-center gap-2 text-secondary">
-                    <Sparkles className="h-5 w-5" />
-                    <p className="font-semibold">AI Recommendation</p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-secondary">
+                      <Sparkles className="h-5 w-5" />
+                      <p className="font-semibold">AI Recommendation</p>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setIsRecommendationExpanded(!isRecommendationExpanded)}
+                      className="gap-2"
+                    >
+                      {isRecommendationExpanded ? (
+                        <>
+                          <ChevronUp className="h-4 w-4" />
+                          Collapse
+                        </>
+                      ) : (
+                        <>
+                          <ChevronDown className="h-4 w-4" />
+                          Expand
+                        </>
+                      )}
+                    </Button>
                   </div>
                   <div className="prose prose-sm max-w-none">
-                    <p className="text-foreground whitespace-pre-wrap">{recommendation}</p>
+                    <p className="text-foreground whitespace-pre-wrap">
+                      {isRecommendationExpanded 
+                        ? recommendation 
+                        : getCollapsedRecommendation(recommendation)}
+                    </p>
                   </div>
                 </div>
               </Card>
@@ -171,7 +243,10 @@ const Index = () => {
       <section className="container mx-auto px-4 py-20">
         <h3 className="text-3xl font-bold text-center mb-12">Why Choose Cannabis Companion?</h3>
         <div className="grid md:grid-cols-3 gap-8">
-          <Card className="p-6 hover:shadow-xl transition-shadow border-primary/10">
+          <Card 
+            className="p-6 hover:shadow-xl transition-shadow border-primary/10 cursor-pointer"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          >
             <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
               <Sparkles className="h-6 w-6 text-primary" />
             </div>
@@ -182,7 +257,10 @@ const Index = () => {
             </p>
           </Card>
 
-          <Card className="p-6 hover:shadow-xl transition-shadow border-secondary/10">
+          <Card 
+            className="p-6 hover:shadow-xl transition-shadow border-secondary/10 cursor-pointer"
+            onClick={() => navigate('/dispensaries')}
+          >
             <div className="h-12 w-12 rounded-full bg-secondary/10 flex items-center justify-center mb-4">
               <MapPin className="h-6 w-6 text-secondary" />
             </div>

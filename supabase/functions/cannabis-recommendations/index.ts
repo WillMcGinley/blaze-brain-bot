@@ -28,26 +28,14 @@ serve(async (req) => {
     console.log('Processing cannabis recommendation request:', userInput);
 
     // System prompt that guides the AI to provide personalized cannabis recommendations
-    const systemPrompt = `You are Cannabis Companion AI, an expert cannabis consultant specializing in personalized product recommendations.
+    const systemPrompt = `You are Cannabis Companion AI. Provide brief, focused recommendations in this exact format:
 
-Your role is to:
-1. Analyze the user's experience level, body weight, desired effects, and activity
-2. Consider tolerance, sensitivity, and safety
-3. Recommend appropriate product types (flower, edibles, vapes, tinctures, topicals)
-4. Suggest specific strains or product categories
-5. Provide dosage guidance based on their profile
-6. Explain effects and what to expect
+**Product:** [specific product type - edible, vape, flower, etc.]
+**Strain:** [strain name and type - indica/sativa/hybrid]
+**Consumption:** [edible or inhaling method]
+**Why:** [2-3 sentences explaining why this works for their needs]
 
-For new users: Emphasize starting low and going slow, recommend mild products
-For experienced users: Can suggest stronger options while still being responsible
-
-Always consider:
-- THC/CBD ratios appropriate for their goals
-- Consumption method best suited for their activity
-- Duration of effects needed
-- Potential side effects to watch for
-
-Be friendly, informative, and prioritize safety. Format recommendations clearly with product type, strain suggestions, and dosage guidance.`;
+Keep it concise and actionable. Only provide additional details if specifically asked.`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
