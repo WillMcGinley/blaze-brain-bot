@@ -2,14 +2,62 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Sparkles, MapPin, ShoppingBag, TrendingUp, MessageSquare, Package } from "lucide-react";
+import { Sparkles, MapPin, ShoppingBag, TrendingUp, MessageSquare, Package, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [recommendation, setRecommendation] = useState("");
+  const { toast } = useToast();
 
-  const handleSearch = () => {
-    // Placeholder for search functionality
-    console.log("Searching for:", searchQuery);
+  const examplePrompts = [
+    "I'm a 150 pound woman, fairly new with cannabis and want something that will bring me a peaceful mind on my hike.",
+    "I'm an experienced user, 200 pounds, looking for an energizing sativa for gaming sessions with friends.",
+    "First-time user, 130 pounds, need something gentle to help me sleep without feeling too high.",
+    "Moderate experience, 170 pounds, want a creative boost for my art projects without anxiety.",
+  ];
+
+  const handleSearch = async (query?: string) => {
+    const searchText = query || searchQuery;
+    if (!searchText.trim()) {
+      toast({
+        title: "Please enter a question",
+        description: "Tell us what you're looking for",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    setRecommendation("");
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('cannabis-recommendations', {
+        body: { userInput: searchText }
+      });
+
+      if (error) throw error;
+
+      if (data?.recommendation) {
+        setRecommendation(data.recommendation);
+      }
+    } catch (error) {
+      console.error('Error getting recommendation:', error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to get recommendation. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleExampleClick = (prompt: string) => {
+    setSearchQuery(prompt);
+    handleSearch(prompt);
   };
 
   return (
@@ -47,6 +95,24 @@ const Index = () => {
               based on your preferences and desired activities.
             </p>
 
+            {/* Example Prompts */}
+            <div className="mb-8 max-w-3xl mx-auto">
+              <h3 className="text-lg font-semibold mb-4 text-center">Try asking something like:</h3>
+              <div className="grid gap-3">
+                {examplePrompts.map((prompt, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleExampleClick(prompt)}
+                    className="text-left p-4 bg-card/50 hover:bg-card border border-border rounded-lg transition-colors"
+                  >
+                    <p className="text-sm text-muted-foreground">
+                      {["💆‍♀️", "🎮", "😴", "🎨"][index]} {prompt}
+                    </p>
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* AI Search Box */}
             <Card className="p-6 max-w-2xl mx-auto shadow-lg border-2 border-primary/20">
               <div className="space-y-4">
@@ -59,12 +125,22 @@ const Index = () => {
                     placeholder="e.g., 'I want something relaxing for movie night' or 'Best edibles for beginners'"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+                    onKeyPress={(e) => e.key === "Enter" && !isLoading && handleSearch()}
                     className="flex-1"
+                    disabled={isLoading}
                   />
-                  <Button onClick={handleSearch} className="gap-2">
-                    <Sparkles className="h-4 w-4" />
-                    Search
+                  <Button onClick={() => handleSearch()} className="gap-2" disabled={isLoading}>
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Thinking...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="h-4 w-4" />
+                        Search
+                      </>
+                    )}
                   </Button>
                 </div>
                 <p className="text-sm text-muted-foreground">
@@ -72,6 +148,21 @@ const Index = () => {
                 </p>
               </div>
             </Card>
+
+            {/* Recommendation Result */}
+            {recommendation && (
+              <Card className="p-6 max-w-2xl mx-auto mt-6 shadow-lg border-2 border-secondary/20">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 text-secondary">
+                    <Sparkles className="h-5 w-5" />
+                    <p className="font-semibold">AI Recommendation</p>
+                  </div>
+                  <div className="prose prose-sm max-w-none">
+                    <p className="text-foreground whitespace-pre-wrap">{recommendation}</p>
+                  </div>
+                </div>
+              </Card>
+            )}
           </div>
         </div>
       </section>
