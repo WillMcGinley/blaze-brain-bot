@@ -50,7 +50,7 @@ const Index = () => {
         <div className="grid md:grid-cols-3 gap-8">
           <Card 
             className="p-6 hover:shadow-xl transition-shadow border-secondary/10 cursor-pointer"
-            onClick={() => window.open('/ai-companion', '_blank')}
+            onClick={() => window.open('/personal-companion', '_blank')}
           >
             <div className="h-12 w-12 rounded-full bg-secondary/10 flex items-center justify-center mb-4">
               <TrendingUp className="h-6 w-6 text-secondary" />
@@ -68,7 +68,7 @@ const Index = () => {
             <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
               <Sparkles className="h-6 w-6 text-primary" />
             </div>
-            <h4 className="text-xl font-semibold mb-2">Personalized Experience</h4>
+            <h4 className="text-xl font-semibold mb-2">Fast Match</h4>
             <p className="text-muted-foreground">
               A friendly, knowledgeable cannabis companion that helps you discover products tailored to your vibe, tolerance, and goals. Ask anything and get warm, conversational guidance.
             </p>
