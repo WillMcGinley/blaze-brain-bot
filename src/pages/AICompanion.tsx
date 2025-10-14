@@ -18,7 +18,9 @@ const AICompanion = () => {
   const { toast } = useToast();
 
   const handleCategorySelect = (categoryId: string) => {
+    console.log("Category selected:", categoryId);
     if (categoryId === "personalized") {
+      console.log("Setting view to chat");
       setCurrentView("chat");
       return;
     }
