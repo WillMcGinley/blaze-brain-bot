@@ -39,7 +39,7 @@ export const ChatInterface = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Hey there! 🌿 I'm your cannabis companion. I'm here to help you discover the perfect products for your vibe, experience level, and goals. What brings you here today?",
+      content: "Hey there! 🌿 I&apos;m your cannabis companion. Whether you&apos;re looking for something to ease anxiety, enhance creativity, or just relax with friends — I&apos;m here to guide you. What brings you here today?",
     },
   ]);
   const [input, setInput] = useState("");
@@ -113,7 +113,21 @@ export const ChatInterface = () => {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-12rem)] max-w-5xl mx-auto">
+    <div className="flex flex-col h-[calc(100vh-16rem)] max-w-5xl mx-auto">
+      {/* Header Description */}
+      <div className="mb-6 p-6 bg-gradient-to-br from-primary/5 to-secondary/5 rounded-lg border border-primary/10">
+        <h2 className="text-2xl font-bold mb-3 flex items-center gap-2">
+          <Leaf className="h-6 w-6 text-primary" />
+          Your Personal Cannabis Companion
+        </h2>
+        <p className="text-muted-foreground mb-3">
+          Welcome to your personalized cannabis guidance experience! I&apos;m here to help you discover products perfectly tailored to your vibe, tolerance, and goals.
+        </p>
+        <p className="text-sm text-muted-foreground">
+          Feel free to ask me anything — from managing anxiety to finding the perfect strain for a chill night with friends. My recommendations are warm, conversational, and focused on your safety and comfort. Let&apos;s find what works best for you! 🌿
+        </p>
+      </div>
+
       {/* Quick Start Prompts */}
       <div className="mb-4">
         <p className="text-sm text-muted-foreground mb-3">Quick start:</p>
