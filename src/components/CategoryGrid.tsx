@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { Tv, Gamepad2, Dumbbell, Users, Moon, Lightbulb, PartyPopper, Coffee } from "lucide-react";
+import { Tv, Gamepad2, Dumbbell, Users, Moon, Lightbulb, PartyPopper, Coffee, Sparkles } from "lucide-react";
 
 interface Category {
   id: string;
@@ -10,6 +10,13 @@ interface Category {
 }
 
 const categories: Category[] = [
+  {
+    id: "personalized",
+    title: "Personalized Experience",
+    emoji: "🌿",
+    icon: Sparkles,
+    description: "Chat with our AI companion for tailored guidance"
+  },
   {
     id: "watching-tv",
     title: "Watching TV / Movies",

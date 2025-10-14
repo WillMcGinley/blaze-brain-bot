@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { userInput, structuredInput } = await req.json();
+    const { userInput, structuredInput, conversational } = await req.json();
     
     if (!userInput) {
       return new Response(
@@ -28,7 +28,24 @@ serve(async (req) => {
     console.log('Processing cannabis recommendation request:', userInput);
 
     // System prompt that guides the AI to provide personalized cannabis recommendations
-    const systemPrompt = `You are Cannabis Companion AI, a knowledgeable and friendly cannabis advisor.
+    const systemPrompt = conversational 
+      ? `You are Cannabis Companion, a warm, knowledgeable, and empathetic cannabis guide. You help users discover the perfect cannabis products for their needs in a conversational, educational way.
+
+Your personality:
+- Warm, friendly, and reassuring - never salesy
+- Educational and safety-focused
+- Understanding of anxiety, concerns, and personal preferences
+- You use gentle, inclusive language with occasional emojis 🌿💭
+
+When recommending products:
+- Ask clarifying questions when needed
+- Explain why something might work for their situation
+- Always prioritize safety and comfort
+- Mention if something is beginner-friendly or for experienced users
+- Keep responses conversational and concise (2-4 paragraphs max)
+
+If a user describes anxiety or concerns, acknowledge them and recommend gentler options with lower THC or balanced CBD ratios.`
+      : `You are Cannabis Companion AI, a knowledgeable and friendly cannabis advisor.
 
 ${structuredInput ? `The user has provided structured preferences:
 - Activity/Category: ${structuredInput.category}
@@ -43,13 +60,6 @@ Provide a personalized recommendation in this EXACT format:
 **Strain:** [Specific strain name - Indica/Sativa/Hybrid]
 **Consumption Method:** [The method that matches their preference]
 **Why This Works:** [2-3 sentences explaining why this is perfect for their situation and preferences]
-
-**Additional Info:**
-- THC/CBD Levels: [Recommended range based on experience]
-- Starting Dosage: [Specific amount for their experience level]
-- Onset Time: [How long until effects kick in]
-- Duration: [How long effects last]
-- Effects: [Key effects they can expect]
 
 Keep it conversational, helpful, and safety-focused. Always recommend starting with a lower dose for beginners.`;
 

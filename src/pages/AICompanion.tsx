@@ -6,8 +6,9 @@ import { useToast } from "@/hooks/use-toast";
 import { CategoryGrid } from "@/components/CategoryGrid";
 import { QuestionFlow } from "@/components/QuestionFlow";
 import { ProductRecommendations } from "@/components/ProductRecommendations";
+import { ChatInterface } from "@/components/ChatInterface";
 
-type View = "categories" | "questions" | "results";
+type View = "categories" | "questions" | "results" | "chat";
 
 const AICompanion = () => {
   const [currentView, setCurrentView] = useState<View>("categories");
@@ -17,6 +18,10 @@ const AICompanion = () => {
   const { toast } = useToast();
 
   const handleCategorySelect = (categoryId: string) => {
+    if (categoryId === "personalized") {
+      setCurrentView("chat");
+      return;
+    }
     setSelectedCategory(categoryId);
     setCurrentView("questions");
   };
@@ -106,6 +111,17 @@ const AICompanion = () => {
             recommendation={recommendation}
             onStartOver={handleStartOver}
           />
+        )}
+
+        {!isLoading && currentView === "chat" && (
+          <div className="max-w-6xl mx-auto">
+            <div className="mb-6">
+              <Button variant="outline" onClick={handleStartOver}>
+                ← Back to Categories
+              </Button>
+            </div>
+            <ChatInterface />
+          </div>
         )}
       </div>
     </div>
