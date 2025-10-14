@@ -50,7 +50,7 @@ const Index = () => {
         <div className="grid md:grid-cols-3 gap-8">
           <Card 
             className="p-6 hover:shadow-xl transition-shadow border-secondary/10 cursor-pointer group relative"
-            onClick={() => navigate('/ai-companion')}
+            onClick={() => navigate('/personal-companion')}
           >
             <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
               <Button 
@@ -58,7 +58,7 @@ const Index = () => {
                 variant="ghost" 
                 onClick={(e) => {
                   e.stopPropagation();
-                  window.open('/ai-companion', '_blank');
+                  window.open('/personal-companion', '_blank');
                 }}
                 className="text-xs"
               >
