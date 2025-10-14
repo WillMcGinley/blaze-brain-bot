@@ -17,13 +17,18 @@ const AICompanion = () => {
   const [recommendation, setRecommendation] = useState("");
   const { toast } = useToast();
 
+  console.log("=== AICompanion render - currentView:", currentView);
+
   const handleCategorySelect = (categoryId: string) => {
-    console.log("Category selected:", categoryId);
+    console.log("=== Category selected:", categoryId);
+    console.log("=== Current view before:", currentView);
     if (categoryId === "personalized") {
-      console.log("Setting view to chat");
+      console.log("=== Personalized detected, setting view to chat");
       setCurrentView("chat");
+      console.log("=== View should now be chat");
       return;
     }
+    console.log("=== Setting category to:", categoryId);
     setSelectedCategory(categoryId);
     setCurrentView("questions");
   };
