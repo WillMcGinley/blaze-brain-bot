@@ -6,7 +6,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import DispensaryLocations from "./pages/DispensaryLocations";
 import AICompanion from "./pages/AICompanion";
-import PersonalCompanion from "./pages/PersonalCompanion";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -21,7 +20,6 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/dispensaries" element={<DispensaryLocations />} />
           <Route path="/ai-companion" element={<AICompanion />} />
-          <Route path="/personal-companion" element={<PersonalCompanion />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

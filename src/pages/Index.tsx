@@ -49,9 +49,22 @@ const Index = () => {
         <h3 className="text-3xl font-bold text-center mb-12">Why Choose Cannabis Companion?</h3>
         <div className="grid md:grid-cols-3 gap-8">
           <Card 
-            className="p-6 hover:shadow-xl transition-shadow border-secondary/10 cursor-pointer"
-            onClick={() => window.open('/personal-companion', '_blank')}
+            className="p-6 hover:shadow-xl transition-shadow border-secondary/10 cursor-pointer group relative"
+            onClick={() => navigate('/ai-companion')}
           >
+            <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+              <Button 
+                size="sm" 
+                variant="ghost" 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  window.open('/ai-companion', '_blank');
+                }}
+                className="text-xs"
+              >
+                Open in New Tab ↗
+              </Button>
+            </div>
             <div className="h-12 w-12 rounded-full bg-secondary/10 flex items-center justify-center mb-4">
               <TrendingUp className="h-6 w-6 text-secondary" />
             </div>

@@ -113,157 +113,165 @@ export const ChatInterface = () => {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-16rem)] max-w-5xl mx-auto">
-      {/* Header Description */}
-      <div className="mb-6 p-6 bg-gradient-to-br from-primary/5 to-secondary/5 rounded-lg border border-primary/10">
-        <h2 className="text-2xl font-bold mb-3 flex items-center gap-2">
-          <Leaf className="h-6 w-6 text-primary" />
-          Your Personal Cannabis Companion
-        </h2>
-        <p className="text-muted-foreground mb-3">
-          Welcome to your personalized cannabis guidance experience! I&apos;m here to help you discover products perfectly tailored to your vibe, tolerance, and goals.
-        </p>
-        <p className="text-sm text-muted-foreground">
-          Feel free to ask me anything — from managing anxiety to finding the perfect strain for a chill night with friends. My recommendations are warm, conversational, and focused on your safety and comfort. Let&apos;s find what works best for you! 🌿
-        </p>
-      </div>
+    <div className="flex gap-6 h-[calc(100vh-12rem)] max-w-[95vw] mx-auto">
+      {/* Side Banner - Quick Start */}
+      <div className="w-64 flex-shrink-0 space-y-4">
+        <div className="sticky top-4">
+          <div className="p-4 bg-gradient-to-br from-primary/5 to-secondary/5 rounded-lg border border-primary/10 mb-4">
+            <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
+              <Leaf className="h-5 w-5 text-primary" />
+              Your Guide 🌿
+            </h3>
+            <p className="text-xs text-muted-foreground">
+              Ask me anything about cannabis — from managing anxiety to finding the perfect strain for any occasion.
+            </p>
+          </div>
 
-      {/* Quick Start Prompts */}
-      <div className="mb-4">
-        <p className="text-sm text-muted-foreground mb-3">Quick start:</p>
-        <div className="flex flex-wrap gap-2">
-          {quickStartPrompts.map((prompt, index) => (
-            <Button
-              key={index}
-              variant="outline"
-              size="sm"
-              onClick={() => handleSend(prompt)}
-              disabled={isLoading}
-              className="text-xs"
-            >
-              {prompt}
-            </Button>
-          ))}
+          <div className="p-4 bg-card rounded-lg border">
+            <p className="text-sm font-semibold mb-3 text-muted-foreground">Quick Start:</p>
+            <div className="space-y-2">
+              {quickStartPrompts.map((prompt, index) => (
+                <Button
+                  key={index}
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleSend(prompt)}
+                  disabled={isLoading}
+                  className="w-full justify-start text-xs h-auto py-2 px-3 whitespace-normal text-left"
+                >
+                  {prompt}
+                </Button>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Chat Messages */}
-      <ScrollArea ref={scrollRef} className="flex-1 pr-4">
-        <div className="space-y-4 pb-4">
-          {messages.map((message, index) => (
-            <div key={index} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
-              <div className={`max-w-[80%] ${message.role === "user" ? "order-2" : "order-1"}`}>
-                <div
-                  className={`rounded-2xl px-4 py-3 ${
-                    message.role === "user"
-                      ? "bg-primary text-primary-foreground ml-auto"
-                      : "bg-muted"
-                  }`}
-                >
-                  {message.role === "assistant" && (
-                    <div className="flex items-center gap-2 mb-2">
-                      <Leaf className="h-4 w-4 text-primary" />
-                      <span className="text-xs font-medium text-primary">Cannabis Companion</span>
+      {/* Main Chat Area */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Chat Messages */}
+        <ScrollArea ref={scrollRef} className="flex-1 pr-4">
+          <div className="space-y-4 pb-4">
+            {messages.map((message, index) => (
+              <div key={index} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
+                <div className={`max-w-[80%] ${message.role === "user" ? "order-2" : "order-1"}`}>
+                  <div
+                    className={`rounded-2xl px-6 py-4 ${
+                      message.role === "user"
+                        ? "bg-primary text-primary-foreground ml-auto"
+                        : "bg-muted"
+                    }`}
+                  >
+                    {message.role === "assistant" && (
+                      <div className="flex items-center gap-2 mb-2">
+                        <Leaf className="h-4 w-4 text-primary" />
+                        <span className="text-xs font-medium text-primary">Cannabis Companion</span>
+                      </div>
+                    )}
+                    <p className="text-base whitespace-pre-wrap leading-relaxed">{message.content}</p>
+                  </div>
+
+                  {/* Product Cards */}
+                  {message.products && message.products.length > 0 && (
+                    <div className="mt-3 space-y-3">
+                      <p className="text-sm text-muted-foreground flex items-center gap-2">
+                        <Sparkles className="h-3 w-3" />
+                        You might like these options based on what you described 🌿
+                      </p>
+                      <div className="grid gap-3">
+                        {message.products.map((product, pIndex) => (
+                          <Card key={pIndex} className="hover:shadow-md transition-shadow bg-card/50 backdrop-blur-sm">
+                            <CardContent className="p-4">
+                              <div className="flex items-start justify-between mb-3">
+                                <div>
+                                  <h4 className="font-semibold text-sm">{product.name}</h4>
+                                  <p className="text-xs text-muted-foreground">{product.type}</p>
+                                </div>
+                                <Badge variant="secondary" className="text-xs">
+                                  {product.availability}
+                                </Badge>
+                              </div>
+
+                              <div className="grid grid-cols-2 gap-2 mb-3">
+                                <div>
+                                  <p className="text-xs text-muted-foreground">THC</p>
+                                  <Badge variant="outline" className="text-xs font-mono">
+                                    {product.thc}
+                                  </Badge>
+                                </div>
+                                <div>
+                                  <p className="text-xs text-muted-foreground">CBD</p>
+                                  <Badge variant="outline" className="text-xs font-mono">
+                                    {product.cbd}
+                                  </Badge>
+                                </div>
+                              </div>
+
+                              <div className="mb-3">
+                                <p className="text-xs text-muted-foreground mb-1">Effects</p>
+                                <div className="flex flex-wrap gap-1">
+                                  {product.effects.split(",").map((effect, i) => (
+                                    <Badge key={i} variant="secondary" className="text-xs">
+                                      {effect.trim()}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </div>
+
+                              <div className="flex items-center justify-between pt-3 border-t">
+                                <span className="text-lg font-bold text-primary">{product.price}</span>
+                                <Button size="sm" variant="ghost" className="gap-2 text-xs">
+                                  View Details
+                                  <ExternalLink className="h-3 w-3" />
+                                </Button>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
                     </div>
                   )}
-                  <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                 </div>
+              </div>
+            ))}
 
-                {/* Product Cards */}
-                {message.products && message.products.length > 0 && (
-                  <div className="mt-3 space-y-3">
-                    <p className="text-sm text-muted-foreground flex items-center gap-2">
-                      <Sparkles className="h-3 w-3" />
-                      You might like these options based on what you described 🌿
-                    </p>
-                    <div className="grid gap-3">
-                      {message.products.map((product, pIndex) => (
-                        <Card key={pIndex} className="hover:shadow-md transition-shadow bg-card/50 backdrop-blur-sm">
-                          <CardContent className="p-4">
-                            <div className="flex items-start justify-between mb-3">
-                              <div>
-                                <h4 className="font-semibold text-sm">{product.name}</h4>
-                                <p className="text-xs text-muted-foreground">{product.type}</p>
-                              </div>
-                              <Badge variant="secondary" className="text-xs">
-                                {product.availability}
-                              </Badge>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-2 mb-3">
-                              <div>
-                                <p className="text-xs text-muted-foreground">THC</p>
-                                <Badge variant="outline" className="text-xs font-mono">
-                                  {product.thc}
-                                </Badge>
-                              </div>
-                              <div>
-                                <p className="text-xs text-muted-foreground">CBD</p>
-                                <Badge variant="outline" className="text-xs font-mono">
-                                  {product.cbd}
-                                </Badge>
-                              </div>
-                            </div>
-
-                            <div className="mb-3">
-                              <p className="text-xs text-muted-foreground mb-1">Effects</p>
-                              <div className="flex flex-wrap gap-1">
-                                {product.effects.split(",").map((effect, i) => (
-                                  <Badge key={i} variant="secondary" className="text-xs">
-                                    {effect.trim()}
-                                  </Badge>
-                                ))}
-                              </div>
-                            </div>
-
-                            <div className="flex items-center justify-between pt-3 border-t">
-                              <span className="text-lg font-bold text-primary">{product.price}</span>
-                              <Button size="sm" variant="ghost" className="gap-2 text-xs">
-                                View Details
-                                <ExternalLink className="h-3 w-3" />
-                              </Button>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
+            {isLoading && (
+              <div className="flex justify-start">
+                <div className="bg-muted rounded-2xl px-6 py-4">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="h-4 w-4 text-primary animate-pulse" />
+                    <span className="text-sm text-muted-foreground">Thinking...</span>
                   </div>
-                )}
-              </div>
-            </div>
-          ))}
-
-          {isLoading && (
-            <div className="flex justify-start">
-              <div className="bg-muted rounded-2xl px-4 py-3">
-                <div className="flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 text-primary animate-pulse" />
-                  <span className="text-sm text-muted-foreground">Thinking...</span>
                 </div>
               </div>
-            </div>
-          )}
-        </div>
-      </ScrollArea>
+            )}
+          </div>
+        </ScrollArea>
 
-      {/* Input Area */}
-      <div className="mt-4 flex gap-2">
-        <Textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              handleSend();
-            }
-          }}
-          placeholder="Ask me anything about cannabis... 💭"
-          className="min-h-[60px] resize-none"
-          disabled={isLoading}
-        />
-        <Button onClick={() => handleSend()} disabled={isLoading || !input.trim()} size="icon" className="h-[60px] w-[60px]">
-          <Send className="h-5 w-5" />
-        </Button>
+        {/* Input Area */}
+        <div className="mt-6 flex gap-3">
+          <Textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSend();
+              }
+            }}
+            placeholder="Ask me anything about cannabis... 💭"
+            className="min-h-[100px] text-base resize-none"
+            disabled={isLoading}
+          />
+          <Button 
+            onClick={() => handleSend()} 
+            disabled={isLoading || !input.trim()} 
+            size="icon" 
+            className="h-[100px] w-[100px] rounded-xl"
+          >
+            <Send className="h-6 w-6" />
+          </Button>
+        </div>
       </div>
     </div>
   );
