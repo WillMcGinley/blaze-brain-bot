@@ -90,10 +90,9 @@ const Index = () => {
             <div className="h-12 w-12 rounded-full bg-secondary/10 flex items-center justify-center mb-4">
               <TrendingUp className="h-6 w-6 text-secondary" />
             </div>
-            <h4 className="text-xl font-semibold mb-2">Personalized Experience</h4>
+            <h4 className="text-xl font-semibold mb-2">Personal Cannabis Companion</h4>
             <p className="text-muted-foreground">
-              Tell us about your experience level, preferences, and activities - get recommendations
-              that match your lifestyle.
+              A friendly, knowledgeable cannabis companion that helps you discover products tailored to your vibe, tolerance, and goals. Ask anything and get warm, conversational guidance.
             </p>
           </Card>
 
