@@ -11,13 +11,6 @@ interface Category {
 
 const categories: Category[] = [
   {
-    id: "personalized",
-    title: "Personalized Experience",
-    emoji: "🌿",
-    icon: Sparkles,
-    description: "A friendly, knowledgeable cannabis companion that helps you discover products tailored to your vibe, tolerance, and goals. Ask anything and get warm, conversational guidance."
-  },
-  {
     id: "watching-tv",
     title: "Watching TV / Movies",
     emoji: "📺",
@@ -92,20 +85,17 @@ export const CategoryGrid = ({ onSelectCategory }: CategoryGridProps) => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {categories.map((category) => {
           const Icon = category.icon;
-          const isPersonalized = category.id === "personalized";
           return (
             <Card
               key={category.id}
               onClick={() => onSelectCategory(category.id)}
-              className={`p-6 cursor-pointer hover:scale-105 transition-all duration-200 hover:shadow-lg border-2 hover:border-primary/50 ${
-                isPersonalized ? "md:col-span-2 bg-gradient-to-br from-primary/5 to-secondary/5" : ""
-              }`}
+              className="p-6 cursor-pointer hover:scale-105 transition-all duration-200 hover:shadow-lg border-2 hover:border-primary/50"
             >
               <div className="flex flex-col items-center text-center space-y-3">
                 <div className="text-4xl">{category.emoji}</div>
                 <Icon className="h-8 w-8 text-primary" />
                 <h3 className="font-semibold text-lg">{category.title}</h3>
-                <p className={`text-sm text-muted-foreground ${isPersonalized ? "max-w-md" : ""}`}>
+                <p className="text-sm text-muted-foreground">
                   {category.description}
                 </p>
               </div>

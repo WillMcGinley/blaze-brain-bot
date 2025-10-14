@@ -55,10 +55,9 @@ const Index = () => {
             <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
               <Sparkles className="h-6 w-6 text-primary" />
             </div>
-            <h4 className="text-xl font-semibold mb-2">AI-Powered Recommendations</h4>
+            <h4 className="text-xl font-semibold mb-2">Personalized Experience</h4>
             <p className="text-muted-foreground">
-              Our intelligent system learns your preferences and suggests products tailored to your
-              experience level and desired effects.
+              A friendly, knowledgeable cannabis companion that helps you discover products tailored to your vibe, tolerance, and goals. Ask anything and get warm, conversational guidance.
             </p>
           </Card>
 
