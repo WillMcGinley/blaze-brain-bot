@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { userInput } = await req.json();
+    const { userInput, structuredInput } = await req.json();
     
     if (!userInput) {
       return new Response(
@@ -28,14 +28,30 @@ serve(async (req) => {
     console.log('Processing cannabis recommendation request:', userInput);
 
     // System prompt that guides the AI to provide personalized cannabis recommendations
-    const systemPrompt = `You are Cannabis Companion AI. Provide brief, focused recommendations in this exact format:
+    const systemPrompt = `You are Cannabis Companion AI, a knowledgeable and friendly cannabis advisor.
 
-**Product:** [specific product type - edible, vape, flower, etc.]
-**Strain:** [strain name and type - indica/sativa/hybrid]
-**Consumption:** [edible or inhaling method]
-**Why:** [2-3 sentences explaining why this works for their needs]
+${structuredInput ? `The user has provided structured preferences:
+- Activity/Category: ${structuredInput.category}
+- Experience Level: ${structuredInput.experience}
+- Desired Vibe: ${structuredInput.vibe}
+- Preferred Consumption: ${structuredInput.consumption}
+- Onset Speed: ${structuredInput.onset}` : ''}
 
-Keep it concise and actionable. Only provide additional details if specifically asked.`;
+Provide a personalized recommendation in this EXACT format:
+
+**Recommended Product:** [Specific product name and type]
+**Strain:** [Specific strain name - Indica/Sativa/Hybrid]
+**Consumption Method:** [The method that matches their preference]
+**Why This Works:** [2-3 sentences explaining why this is perfect for their situation and preferences]
+
+**Additional Info:**
+- THC/CBD Levels: [Recommended range based on experience]
+- Starting Dosage: [Specific amount for their experience level]
+- Onset Time: [How long until effects kick in]
+- Duration: [How long effects last]
+- Effects: [Key effects they can expect]
+
+Keep it conversational, helpful, and safety-focused. Always recommend starting with a lower dose for beginners.`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
