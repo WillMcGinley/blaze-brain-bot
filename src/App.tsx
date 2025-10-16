@@ -8,6 +8,7 @@ import DispensaryLocations from "./pages/DispensaryLocations";
 import AICompanion from "./pages/AICompanion";
 import PersonalCompanion from "./pages/PersonalCompanion";
 import Subscriptions from "./pages/Subscriptions";
+import RealTimeInventory from "./pages/RealTimeInventory";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/ai-companion" element={<AICompanion />} />
           <Route path="/personal-companion" element={<PersonalCompanion />} />
           <Route path="/subscriptions" element={<Subscriptions />} />
+          <Route path="/real-time-inventory" element={<RealTimeInventory />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

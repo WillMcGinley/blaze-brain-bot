@@ -115,7 +115,10 @@ const Index = () => {
             </p>
           </Card>
 
-          <Card className="p-6 hover:shadow-xl transition-shadow border-primary/10">
+          <Card 
+            className="p-6 hover:shadow-xl transition-shadow border-primary/10 cursor-pointer"
+            onClick={() => navigate('/real-time-inventory')}
+          >
             <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
               <ShoppingBag className="h-6 w-6 text-primary" />
             </div>

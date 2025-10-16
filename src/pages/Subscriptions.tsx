@@ -2,8 +2,15 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Package, Calendar, DollarSign, Plus, Trash2, Pause, Play } from "lucide-react";
+import { Package, Calendar, DollarSign, Plus, Trash2, Pause, Play, ShoppingBag } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface Subscription {
   id: string;
@@ -16,6 +23,7 @@ interface Subscription {
 
 const Subscriptions = () => {
   const navigate = useNavigate();
+  const [showSelectionDialog, setShowSelectionDialog] = useState(false);
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([
     {
       id: "1",
@@ -73,7 +81,11 @@ const Subscriptions = () => {
           <p className="text-lg text-muted-foreground mb-8">
             Manage your recurring orders and discover new products to add to your routine
           </p>
-          <Button size="lg" className="gap-2">
+          <Button 
+            size="lg" 
+            className="gap-2"
+            onClick={() => setShowSelectionDialog(true)}
+          >
             <Plus className="h-5 w-5" />
             Start a New Subscription
           </Button>
@@ -211,6 +223,39 @@ const Subscriptions = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Selection Dialog */}
+      <Dialog open={showSelectionDialog} onOpenChange={setShowSelectionDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Choose Subscription Type</DialogTitle>
+            <DialogDescription>
+              Select how you'd like to start your subscription
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <Card 
+              className="p-6 cursor-pointer hover:shadow-lg transition-all border-primary/20 hover:border-primary/50"
+              onClick={() => {
+                setShowSelectionDialog(false);
+                navigate('/real-time-inventory');
+              }}
+            >
+              <div className="flex items-start gap-4">
+                <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <ShoppingBag className="h-6 w-6 text-primary" />
+                </div>
+                <div className="space-y-1">
+                  <h4 className="font-semibold">Personal Inventory Selection</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Browse our real-time inventory and select products to subscribe to
+                  </p>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
