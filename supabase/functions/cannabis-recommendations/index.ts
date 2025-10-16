@@ -110,7 +110,8 @@ Keep it conversational, helpful, and safety-focused. Always recommend starting w
           }
         }
       ];
-      requestBody.tool_choice = { type: "function", function: { name: "suggest_products" } };
+      // Let the model decide when to use the tool based on system prompt
+      requestBody.tool_choice = "auto";
     }
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
