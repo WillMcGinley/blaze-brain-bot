@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import DispensaryLocations from "./pages/DispensaryLocations";
 import AICompanion from "./pages/AICompanion";
 import PersonalCompanion from "./pages/PersonalCompanion";
+import Subscriptions from "./pages/Subscriptions";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ const App = () => (
           <Route path="/dispensaries" element={<DispensaryLocations />} />
           <Route path="/ai-companion" element={<AICompanion />} />
           <Route path="/personal-companion" element={<PersonalCompanion />} />
+          <Route path="/subscriptions" element={<Subscriptions />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

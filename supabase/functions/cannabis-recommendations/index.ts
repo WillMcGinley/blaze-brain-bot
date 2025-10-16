@@ -43,8 +43,11 @@ When recommending products:
 - Always prioritize safety and comfort
 - Mention if something is beginner-friendly or for experienced users
 - Keep responses conversational and concise (2-4 paragraphs max)
+- After providing advice, ALWAYS recommend 2-3 specific cannabis products that match their needs
 
-If a user describes anxiety or concerns, acknowledge them and recommend gentler options with lower THC or balanced CBD ratios.`
+If a user describes anxiety or concerns, acknowledge them and recommend gentler options with lower THC or balanced CBD ratios.
+
+After answering their question, you MUST use the suggest_products tool to recommend matching products from inventory.`
       : `You are Cannabis Companion AI, a knowledgeable and friendly cannabis advisor.
 
 ${structuredInput ? `The user has provided structured preferences:
@@ -63,19 +66,60 @@ Provide a personalized recommendation in this EXACT format:
 
 Keep it conversational, helpful, and safety-focused. Always recommend starting with a lower dose for beginners.`;
 
+    const requestBody: any = {
+      model: 'google/gemini-2.5-flash',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userInput }
+      ],
+    };
+
+    // Add tool for product recommendations in conversational mode
+    if (conversational) {
+      requestBody.tools = [
+        {
+          type: "function",
+          function: {
+            name: "suggest_products",
+            description: "Suggest 2-3 cannabis products from the inventory that match the user's needs and preferences.",
+            parameters: {
+              type: "object",
+              properties: {
+                products: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      name: { type: "string", description: "Product name" },
+                      type: { type: "string", description: "Product type (Flower, Edible, Vape, etc.)" },
+                      strain: { type: "string", description: "Strain type (Indica, Sativa, Hybrid)" },
+                      thc: { type: "string", description: "THC percentage range" },
+                      cbd: { type: "string", description: "CBD percentage range" },
+                      effects: { type: "string", description: "Comma-separated effects" },
+                      price: { type: "string", description: "Price range" },
+                      availability: { type: "string", description: "Availability status" }
+                    },
+                    required: ["name", "type", "thc", "cbd", "effects", "price", "availability"],
+                    additionalProperties: false
+                  }
+                }
+              },
+              required: ["products"],
+              additionalProperties: false
+            }
+          }
+        }
+      ];
+      requestBody.tool_choice = { type: "function", function: { name: "suggest_products" } };
+    }
+
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${LOVABLE_API_KEY}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userInput }
-        ],
-      }),
+      body: JSON.stringify(requestBody),
     });
 
     if (!response.ok) {
@@ -100,12 +144,29 @@ Keep it conversational, helpful, and safety-focused. Always recommend starting w
     }
 
     const data = await response.json();
-    const recommendation = data.choices[0].message.content;
+    const choice = data.choices[0];
+    
+    let recommendation = choice.message.content;
+    let products = null;
+
+    // Extract products from tool call if available
+    if (conversational && choice.message.tool_calls && choice.message.tool_calls.length > 0) {
+      const toolCall = choice.message.tool_calls[0];
+      if (toolCall.function.name === "suggest_products") {
+        try {
+          const args = JSON.parse(toolCall.function.arguments);
+          products = args.products;
+          console.log('Extracted products:', products);
+        } catch (e) {
+          console.error('Error parsing tool call arguments:', e);
+        }
+      }
+    }
 
     console.log('Successfully generated recommendation');
 
     return new Response(
-      JSON.stringify({ recommendation }),
+      JSON.stringify({ recommendation, products }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 

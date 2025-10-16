@@ -53,24 +53,6 @@ export const ChatInterface = () => {
     }
   }, [messages]);
 
-  const parseProducts = (text: string): Product[] => {
-    // For now, return sample products - in production, the backend would return structured data
-    if (text.toLowerCase().includes("product") || text.toLowerCase().includes("recommend")) {
-      return [
-        {
-          name: "Blue Dream",
-          type: "Flower",
-          strain: "Hybrid",
-          thc: "18-22%",
-          cbd: "1-2%",
-          effects: "Relaxing, Creative, Uplifting",
-          price: "$45",
-          availability: "In Stock",
-        },
-      ];
-    }
-    return [];
-  };
 
   const handleSend = async (message?: string) => {
     const messageText = message || input;
@@ -92,11 +74,10 @@ export const ChatInterface = () => {
       if (error) throw error;
 
       if (data?.recommendation) {
-        const products = parseProducts(data.recommendation);
         const assistantMessage: Message = {
           role: "assistant",
           content: data.recommendation,
-          products: products.length > 0 ? products : undefined,
+          products: data.products || undefined,
         };
         setMessages((prev) => [...prev, assistantMessage]);
       }
