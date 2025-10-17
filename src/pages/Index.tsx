@@ -18,9 +18,9 @@ const Index = () => {
             </h1>
           </div>
           <nav className="flex gap-4">
-            <Button variant="ghost">How It Works</Button>
-            <Button variant="ghost">Products</Button>
-            <Button variant="secondary">Subscribe</Button>
+            <Button variant="ghost" onClick={() => navigate('/how-it-works')}>How It Works</Button>
+            <Button variant="ghost" onClick={() => navigate('/real-time-inventory')}>Products</Button>
+            <Button variant="secondary" onClick={() => navigate('/subscriptions')}>Subscribe</Button>
           </nav>
         </div>
       </header>
@@ -46,7 +46,7 @@ const Index = () => {
 
       {/* Features Grid */}
       <section className="container mx-auto px-4 py-20">
-        <h3 className="text-3xl font-bold text-center mb-12">Why Choose Cannabis Companion?</h3>
+        <h3 className="text-3xl font-bold text-center mb-12">Let's find your vibe</h3>
         <div className="grid md:grid-cols-3 gap-8">
           <Card 
             className="p-6 hover:shadow-xl transition-shadow border-secondary/10 cursor-pointer group relative"
