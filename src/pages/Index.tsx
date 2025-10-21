@@ -38,7 +38,13 @@ const Index = () => {
           </div>
           <nav className="flex gap-4">
             <Button 
-              variant="ghost" 
+              variant="secondary" 
+              onClick={() => navigate('/auth')}
+            >
+              Log In
+            </Button>
+            <Button 
+              variant="secondary" 
               onClick={() => navigate('/how-it-works')}
               disabled={isLocked}
               className={isLocked ? "blur-sm pointer-events-none" : ""}

@@ -10,6 +10,7 @@ import PersonalCompanion from "./pages/PersonalCompanion";
 import Subscriptions from "./pages/Subscriptions";
 import RealTimeInventory from "./pages/RealTimeInventory";
 import HowItWorks from "./pages/HowItWorks";
+import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/subscriptions" element={<Subscriptions />} />
           <Route path="/real-time-inventory" element={<RealTimeInventory />} />
           <Route path="/how-it-works" element={<HowItWorks />} />
+          <Route path="/auth" element={<Auth />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

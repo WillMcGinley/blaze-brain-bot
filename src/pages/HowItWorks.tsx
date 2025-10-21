@@ -108,18 +108,63 @@ const HowItWorks = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* Account Benefits Section */}
       <section className="container mx-auto px-4 py-16">
-        <Card className="p-12 bg-gradient-to-r from-primary/10 to-secondary/10 border-primary/20">
-          <div className="max-w-2xl mx-auto text-center space-y-6">
-            <h3 className="text-3xl font-bold">Ready to Get Started?</h3>
-            <p className="text-lg text-muted-foreground">
-              Choose any feature above to begin your personalized cannabis journey
-            </p>
-            <Button size="lg" className="gap-2" onClick={() => navigate('/')}>
-              <ArrowLeft className="h-5 w-5" />
-              Back to Home
-            </Button>
+        <Card className="p-12 bg-gradient-to-r from-secondary/10 to-primary/10 border-secondary/20">
+          <div className="max-w-3xl mx-auto space-y-8">
+            <div className="text-center space-y-4">
+              <h3 className="text-3xl font-bold">Why Create an Account?</h3>
+              <p className="text-lg text-muted-foreground">
+                Unlock the full potential of your Cannabis Companion experience
+              </p>
+            </div>
+            
+            <div className="space-y-6">
+              <div className="space-y-3">
+                <h4 className="text-xl font-semibold flex items-center gap-2">
+                  <MessageSquare className="h-5 w-5 text-secondary" />
+                  Personalized AI Conversations
+                </h4>
+                <p className="text-muted-foreground leading-relaxed">
+                  Your Personal Cannabis Companion remembers every conversation, preference, and experience you share. 
+                  The more you interact, the better it understands your unique needs, tolerance levels, and desired effects. 
+                  Each conversation builds on the last, creating increasingly personalized and accurate recommendations tailored specifically to you.
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <h4 className="text-xl font-semibold flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-secondary" />
+                  Your Complete History
+                </h4>
+                <p className="text-muted-foreground leading-relaxed">
+                  Access your entire conversation history, product recommendations, and experiences across all devices. 
+                  Review what worked well, track your journey, and never lose track of products you loved or want to try again.
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <h4 className="text-xl font-semibold flex items-center gap-2">
+                  <Sparkles className="h-5 w-5 text-secondary" />
+                  Smarter Recommendations Over Time
+                </h4>
+                <p className="text-muted-foreground leading-relaxed">
+                  As you use Cannabis Companion, the AI learns from your feedback and preferences. 
+                  What you liked, what was too strong, what helped you relax or focus - all of this information 
+                  helps create a continuously improving recommendation engine that truly knows you.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex justify-center gap-4 pt-4">
+              <Button size="lg" variant="secondary" className="gap-2" onClick={() => navigate('/auth')}>
+                Create Account
+              </Button>
+              <Button size="lg" variant="outline" className="gap-2" onClick={() => navigate('/')}>
+                <ArrowLeft className="h-5 w-5" />
+                Back to Home
+              </Button>
+            </div>
           </div>
         </Card>
       </section>
