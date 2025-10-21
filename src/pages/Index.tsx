@@ -1,10 +1,29 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sparkles, MapPin, ShoppingBag, TrendingUp, MessageSquare, Package } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+
+const LEGAL_STATES = [
+  "Alaska", "Arizona", "California", "Colorado", "Connecticut", "Delaware",
+  "Illinois", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota",
+  "Missouri", "Montana", "Nevada", "New Jersey", "New Mexico", "New York",
+  "Ohio", "Oregon", "Rhode Island", "Vermont", "Virginia", "Washington"
+];
 
 const Index = () => {
   const navigate = useNavigate();
+  const [selectedState, setSelectedState] = useState<string | null>(
+    localStorage.getItem("userState")
+  );
+
+  const handleStateSelect = (state: string) => {
+    setSelectedState(state);
+    localStorage.setItem("userState", state);
+  };
+
+  const isLocked = !selectedState;
 
   return (
     <div className="min-h-screen bg-background">
@@ -18,9 +37,30 @@ const Index = () => {
             </h1>
           </div>
           <nav className="flex gap-4">
-            <Button variant="ghost" onClick={() => navigate('/how-it-works')}>How It Works</Button>
-            <Button variant="ghost" onClick={() => navigate('/real-time-inventory')}>Products</Button>
-            <Button variant="secondary" onClick={() => navigate('/subscriptions')}>Subscribe</Button>
+            <Button 
+              variant="ghost" 
+              onClick={() => navigate('/how-it-works')}
+              disabled={isLocked}
+              className={isLocked ? "blur-sm pointer-events-none" : ""}
+            >
+              How It Works
+            </Button>
+            <Button 
+              variant="ghost" 
+              onClick={() => navigate('/real-time-inventory')}
+              disabled={isLocked}
+              className={isLocked ? "blur-sm pointer-events-none" : ""}
+            >
+              Products
+            </Button>
+            <Button 
+              variant="secondary" 
+              onClick={() => navigate('/subscriptions')}
+              disabled={isLocked}
+              className={isLocked ? "blur-sm pointer-events-none" : ""}
+            >
+              Subscribe
+            </Button>
           </nav>
         </div>
       </header>
@@ -47,7 +87,29 @@ const Index = () => {
       {/* Features Grid */}
       <section className="container mx-auto px-4 py-20">
         <h3 className="text-3xl font-bold text-center mb-12">Let's find your vibe</h3>
-        <div className="grid md:grid-cols-3 gap-8">
+        
+        {isLocked && (
+          <div className="max-w-md mx-auto mb-8 p-6 bg-card border border-border rounded-lg shadow-lg">
+            <h4 className="text-xl font-semibold mb-4 text-center">Select Your State</h4>
+            <p className="text-muted-foreground text-sm mb-4 text-center">
+              Please select a state where recreational cannabis is legal to continue
+            </p>
+            <Select onValueChange={handleStateSelect}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Choose your state..." />
+              </SelectTrigger>
+              <SelectContent>
+                {LEGAL_STATES.map((state) => (
+                  <SelectItem key={state} value={state}>
+                    {state}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+        
+        <div className={`grid md:grid-cols-3 gap-8 ${isLocked ? "blur-md pointer-events-none" : ""}`}>
           <Card 
             className="p-6 hover:shadow-xl transition-shadow border-secondary/10 cursor-pointer group relative"
             onClick={() => navigate('/personal-companion')}
