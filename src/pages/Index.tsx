@@ -4,6 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Sparkles, MapPin, ShoppingBag, TrendingUp, MessageSquare, Package } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 const LEGAL_STATES = [
   "Alaska", "Arizona", "California", "Colorado", "Connecticut", "Delaware",
@@ -17,13 +18,44 @@ const Index = () => {
   const [selectedState, setSelectedState] = useState<string | null>(
     localStorage.getItem("userState")
   );
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Check if user is logged in
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        setIsLoggedIn(true);
+        // If user is logged in and has state in metadata, use it
+        const userState = session.user?.user_metadata?.state;
+        if (userState) {
+          setSelectedState(userState);
+          localStorage.setItem("userState", userState);
+        }
+      }
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session) {
+        setIsLoggedIn(true);
+        const userState = session.user?.user_metadata?.state;
+        if (userState) {
+          setSelectedState(userState);
+          localStorage.setItem("userState", userState);
+        }
+      } else {
+        setIsLoggedIn(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const handleStateSelect = (state: string) => {
     setSelectedState(state);
     localStorage.setItem("userState", state);
   };
 
-  const isLocked = !selectedState;
+  const isLocked = !selectedState && !isLoggedIn;
 
   return (
     <div className="min-h-screen bg-background">

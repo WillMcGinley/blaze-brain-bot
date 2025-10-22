@@ -3,10 +3,18 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Sparkles } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Sparkles, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+
+const LEGAL_STATES = [
+  "Alaska", "Arizona", "California", "Colorado", "Connecticut", "Delaware",
+  "Illinois", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota",
+  "Missouri", "Montana", "Nevada", "New Jersey", "New Mexico", "New York",
+  "Ohio", "Oregon", "Rhode Island", "Vermont", "Virginia", "Washington"
+];
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -14,6 +22,8 @@ const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [selectedState, setSelectedState] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -51,15 +61,43 @@ const Auth = () => {
           description: "You've successfully logged in.",
         });
       } else {
+        // Validate passwords match
+        if (password !== confirmPassword) {
+          toast({
+            title: "Error",
+            description: "Passwords do not match",
+            variant: "destructive",
+          });
+          setLoading(false);
+          return;
+        }
+
+        // Validate state is selected
+        if (!selectedState) {
+          toast({
+            title: "Error",
+            description: "Please select your state",
+            variant: "destructive",
+          });
+          setLoading(false);
+          return;
+        }
+
         const { error } = await supabase.auth.signUp({
           email,
           password,
           options: {
             emailRedirectTo: `${window.location.origin}/`,
+            data: {
+              state: selectedState,
+            },
           },
         });
 
         if (error) throw error;
+
+        // Store state in localStorage as well
+        localStorage.setItem("userState", selectedState);
 
         toast({
           title: "Account created!",
@@ -88,6 +126,12 @@ const Auth = () => {
               Cannabis Companion
             </h1>
           </div>
+          {!isLogin && (
+            <Button variant="ghost" onClick={() => navigate('/')} className="gap-2">
+              <ArrowLeft className="h-4 w-4" />
+              Return to Home
+            </Button>
+          )}
         </div>
       </header>
 
@@ -130,6 +174,39 @@ const Auth = () => {
                 minLength={6}
               />
             </div>
+
+            {!isLogin && (
+              <>
+                <div className="space-y-2">
+                  <Label htmlFor="confirmPassword">Re-type Password</Label>
+                  <Input
+                    id="confirmPassword"
+                    type="password"
+                    placeholder="••••••••"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                    minLength={6}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="state">State</Label>
+                  <Select onValueChange={setSelectedState} value={selectedState}>
+                    <SelectTrigger id="state">
+                      <SelectValue placeholder="Select your state..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {LEGAL_STATES.map((state) => (
+                        <SelectItem key={state} value={state}>
+                          {state}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </>
+            )}
 
             <Button 
               type="submit" 
